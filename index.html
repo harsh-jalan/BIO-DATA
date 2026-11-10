@@ -234,13 +234,17 @@ footer{padding:28px;text-align:center;font-size:12px;color:var(--muted);backgrou
   .hero .txt{left:8vw;right:auto;bottom:22vh;text-align:left;padding:0;max-width:44vw}
   .hero .cue{align-items:flex-start}
 }
+
+/* keep family tree separate from the chapter photos */
+.chapters{overflow:clip}
+.tree{position:relative;z-index:3;background:var(--paper);box-shadow:0 -30px 40px -20px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
 <div class="bar" id="bar"></div>
 <nav class="dots" id="dots">
   <a href="#top" title="Home"></a><a href="#about" title="About"></a><a href="#details" title="Details"></a>
-  <a href="#journey" title="Journey"></a><a href="#family" title="Family"></a><a href="#contact" title="Contact"></a>
+  <a href="#family" title="Family"></a><a href="#contact" title="Contact"></a>
 </nav>
 
 <!-- 1. HERO -->
@@ -357,12 +361,6 @@ footer{padding:28px;text-align:center;font-size:12px;color:var(--muted);backgrou
   </div>
 </section>
 
-<!-- 5. JOURNEY (snake) -->
-<section class="timeline" id="journey">
-  <div class="center-title rv"><div class="eyebrow">Step by step</div><h2>My journey so far</h2></div>
-  <div class="snake" id="snake"><svg id="snSvg"><path id="snBg"/><path id="snPath"/></svg><div class="sn l"><span class="node">01</span><div class="sn-c rv"><div class="yr">1975</div><h4>Where it all began</h4><p>The family's pharmaceuticals and FMCG distribution business is founded in Munger.</p></div></div><div class="sn r"><span class="node">02</span><div class="sn-c rv"><div class="yr">2000</div><h4>Born in Munger</h4><p>Born on 16 March in Munger, Bihar, the younger son of Vikas &amp; Radhika Jalan.</p></div></div><div class="sn l"><span class="node">03</span><div class="sn-c rv"><div class="yr">SRM</div><h4>B.Tech, Computer Science</h4><p>Engineering degree from SRM, Chennai.</p></div></div><div class="sn r"><span class="node">04</span><div class="sn-c rv"><div class="yr">Ahmedabad</div><h4>Taking the legacy forward</h4><p>Runs Shree Narayani Traders, a pharmaceuticals C&amp;F and distribution partnership business in Changodar.</p></div></div><div class="sn l"><span class="node">05</span><div class="sn-c rv"><div class="yr">Today</div><h4>Settled in Ahmedabad</h4><p>Growing the business, close to family, and ready for the next stage of life.</p></div></div></div>
-</section>
-
 <!-- 6. FAMILY TREE -->
 <section class="tree" id="family">
   <div class="center-title rv"><div class="eyebrow">Three generations</div><h2>The Jalan family</h2></div>
@@ -443,16 +441,8 @@ document.querySelectorAll("[data-img]").forEach(e=>e.src=IMG[e.dataset.img]);</s
 
   const heroImg=$('#heroImg'), heroTxt=$('#heroTxt'), curtain=$('#curtain'), hero=$('#top');
   const stmt=$('#about'), ct=$('#contact'), ctImg=$('#ctImg');
-  const snake=$('#snake'), snSvg=$('#snSvg'), snPath=$('#snPath'), snBg=$('#snBg'), sns=$$('.sn'); let snL=1;
-  function buildSnake(){
-    const R=snake.getBoundingClientRect(); snSvg.setAttribute('viewBox',`0 0 ${R.width} ${R.height}`);
-    const pts=sns.map(s=>{const n=s.querySelector('.node').getBoundingClientRect();return [n.left+n.width/2-R.left,n.top+n.height/2-R.top];});
-    let d=`M${pts[0][0]},${pts[0][1]-120} L${pts[0][0]},${pts[0][1]}`;
-    for(let i=1;i<pts.length;i++){const [x0,y0]=pts[i-1],[x1,y1]=pts[i],dy=(y1-y0)*.55; d+=` C${x0},${y0+dy} ${x1},${y1-dy} ${x1},${y1}`;}
-    snPath.setAttribute('d',d); snBg.setAttribute('d',d); snL=snPath.getTotalLength(); snPath.style.strokeDasharray=snL;
-  }
-  buildSnake(); addEventListener('resize',buildSnake); addEventListener('load',buildSnake); document.fonts&&document.fonts.ready.then(buildSnake);
-  const bar=$('#bar'), dots=$$('#dots a'), secs=['#top','#about','#details','#journey','#family','#contact'].map($);
+
+  const bar=$('#bar'), dots=$$('#dots a'), secs=['#top','#about','#details','#family','#contact'].map($);
 
   let ticking=false;
   function frame(){
@@ -482,11 +472,6 @@ document.querySelectorAll("[data-img]").forEach(e=>e.src=IMG[e.dataset.img]);</s
       im.style.transform=`scale(${1.06-0.06*r})`;
     });
     tag.textContent=chs[best].dataset.tag.replace('&amp;','&'); num.textContent='0'+(best+1);
-
-    // snake journey draw
-    const snr=snake.getBoundingClientRect(), snp=clamp((vh()*0.62-snr.top)/snr.height);
-    snPath.style.strokeDashoffset=snL*(1-snp);
-    sns.forEach(s=>{const n=s.querySelector('.node').getBoundingClientRect(); s.classList.toggle('lit',n.top<vh()*0.62);});
 
     // contact parallax
     const cr=ct.getBoundingClientRect(); ctImg.style.transform=`translateY(${(cr.top/vh())*-8}%)`;
