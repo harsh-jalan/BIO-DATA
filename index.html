@@ -70,8 +70,8 @@ img{display:block;max-width:100%}
 /* ---------- CHAPTERS (sticky photo + scrolling cards) ---------- */
 .chapters{position:relative;display:grid;grid-template-columns:1fr 1fr}
 .chapters .photos{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
-.chapters .photos img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.08);transition:none;will-change:opacity,transform}
-.chapters .photos img.on{opacity:1;transform:scale(1)}
+.chapters .photos img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;clip-path:inset(100% 0 0 0);transition:none;will-change:clip-path,transform}
+.chapters .photos img:first-of-type{clip-path:inset(0 0 0 0)}
 .chapters .photos .tag{position:absolute;left:24px;bottom:24px;color:#fff;font-size:12px;letter-spacing:.25em;text-transform:uppercase;z-index:2;text-shadow:0 1px 8px rgba(0,0,0,.6)}
 .chapters .photos .num{position:absolute;right:24px;bottom:12px;color:#fff;font-family:var(--serif);font-size:90px;line-height:1;opacity:.85;z-index:2;text-shadow:0 2px 20px rgba(0,0,0,.4)}
 .chapter{min-height:100vh;display:flex;align-items:center;padding:12vh 6vw}
@@ -461,10 +461,18 @@ document.querySelectorAll("[data-img]").forEach(e=>e.src=IMG[e.dataset.img]);</s
     const sp=prog(stmt), lit=Math.floor(clamp(sp*1.15)*words.length);
     words.forEach((w,i)=>w.classList.toggle('on',i<lit));
 
-    // chapter photos: blend with scroll
-    let best=0,bd=1e9; const ws=chs.map((c,i)=>{const r=c.getBoundingClientRect();const d=Math.abs(r.top+r.height/2-vh()/2);if(d<bd){bd=d;best=i;}return Math.pow(Math.max(0,1-d/(r.height*0.6)),5);});
-    const sum=ws.reduce((a,b)=>a+b,0)||1;
-    chImgs.forEach((im,i)=>{const o=(ws[i]||0)/sum;im.style.opacity=sum<.01?(i===best?1:0):o;im.style.transform=`scale(${1.08-0.08*o})`;});
+    // chapter photos: next photo glides up over the previous one, locked to scroll
+    const ease=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;
+    let best=0;
+    chImgs.forEach((im,i)=>{
+      if(i===0){ im.style.clipPath='inset(0 0 0 0)'; const r0=chs[0].getBoundingClientRect(); im.style.transform=`scale(${1.06-0.06*clamp(1-r0.top/vh())}) translateY(${clamp(-r0.top/r0.height)*-3}%)`; return; }
+      const top=chs[i].getBoundingClientRect().top;
+      const r=ease(clamp((vh()*0.95-top)/(vh()*0.8)));
+      if(r>0.5) best=i;
+      im.style.clipPath=`inset(${(1-r)*100}% 0 0 0)`;
+      im.style.transform=`scale(${1.1-0.1*r}) translateY(${(1-r)*6}%)`;
+      chImgs[i-1].style.filter=r>0&&r<1?`brightness(${1-0.25*r})`:'';
+    });
     tag.textContent=chs[best].dataset.tag.replace('&amp;','&'); num.textContent='0'+(best+1);
 
     // snake journey draw
