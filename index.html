@@ -215,18 +215,15 @@ footer{padding:28px;text-align:center;font-size:12px;color:var(--muted);backgrou
   .chapters{display:block}.chapters .photos{display:none}.chapter{min-height:auto;padding:20px}
 }
 
-/* ---------- DESKTOP: same floating-card look as phone ---------- */
+/* ---------- DESKTOP: split view, tinted glass cards ---------- */
 @media screen and (min-width:861px){
-  .chapters{display:block}
-  .chapters .photos{position:sticky;top:0;height:100vh;margin-bottom:-100vh;z-index:0}
-  .chapters .photos::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.05) 0%,rgba(0,0,0,.1) 45%,rgba(0,0,0,.45) 100%)}
-  .chapters .photos img{object-position:30% 35%!important}
-  .chapters .photos .tag{top:32px;bottom:auto;left:36px}
-  .chapters .photos .num{top:20px;bottom:auto;left:36px;right:auto;margin-top:22px;font-size:96px}
-  .chapter{position:relative;z-index:1;background:transparent!important;min-height:auto;padding:70vh 7vw 30vh;justify-content:flex-end}
-  .chapter:first-of-type{padding-top:40vh}
-  .chapter.t-mist{justify-content:flex-start}
-  .chapter .card{max-width:520px;background:var(--cbg);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:26px;padding:36px 34px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6)}
+  .chapter{background:radial-gradient(120% 90% at 0% 50%,var(--glow,rgba(255,255,255,.0)) 0%,transparent 60%),var(--side)!important}
+  .chapter.t-forest{--glow:rgba(120,150,120,.25)}
+  .chapter.t-mist{--glow:rgba(255,236,210,.6)}
+  .chapter.t-dark{--glow:rgba(196,154,60,.12)}
+  .chapter.t-sky{--glow:rgba(150,195,225,.45)}
+  .chapter .card{background:var(--cbg);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.22);border-radius:26px;padding:36px 34px;box-shadow:0 30px 70px -40px rgba(0,0,0,.55)}
+  .chapter.dk .card{border-color:rgba(255,255,255,.08)}
 }
 </style>
 </head>
