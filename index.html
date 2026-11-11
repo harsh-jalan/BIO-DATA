@@ -31,7 +31,7 @@ img{display:block;max-width:100%}
 @media(max-width:760px){.dots{display:none}}
 
 /* ---------- HERO ---------- */
-.hero{height:220vh;position:relative;background:#000}
+.hero{height:165vh;position:relative;background:#000}
 .hero .stick{position:sticky;top:0;height:100vh;height:100lvh;overflow:hidden}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;transform:scale(1.1);will-change:transform}
 .hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.05) 35%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.8) 100%)}
@@ -46,10 +46,10 @@ img{display:block;max-width:100%}
 .hero .curtain{position:absolute;inset:0;background:var(--ivory);opacity:0;pointer-events:none}
 
 /* ---------- STATEMENT (word reveal) ---------- */
-.statement{height:260vh;position:relative}
+.statement{height:200vh;position:relative}
 .statement .stick{position:sticky;top:0;height:100vh;height:100lvh;display:flex;align-items:center;justify-content:center;padding:0 7vw}
 .statement p{font-family:var(--serif);font-size:clamp(30px,5.6vw,64px);line-height:1.18;max-width:1000px;font-weight:500}
-.statement .w{opacity:.14;transition:opacity .25s,color .25s}
+.statement .w{opacity:.22;transition:opacity .25s,color .25s}
 .statement .w.on{opacity:1}
 .statement .w.hl.on{color:var(--maroon);font-style:italic}
 .eyebrow{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--maroon);font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:12px}
@@ -454,10 +454,10 @@ document.querySelectorAll("[data-img]").forEach(e=>e.src=IMG[e.dataset.img]);</s
     const hp=prog(hero);
     heroImg.style.transform=`scale(${1.1-0.1*clamp(hp*1.6)})`;
     heroTxt.style.transform=`translateY(${hp*-120}px)`; heroTxt.style.opacity=1-clamp(hp*1.8);
-    curtain.style.opacity=clamp((hp-.7)/.3);
+    curtain.style.opacity=0;
 
     // statement words
-    const sp=prog(stmt), lit=Math.floor(clamp(sp*1.15)*words.length);
+    const sr2=stmt.getBoundingClientRect(), sp=clamp((vh()*0.6-sr2.top)/(sr2.height-vh()*0.2)), lit=Math.floor(clamp(sp*1.2)*words.length);
     words.forEach((w,i)=>w.classList.toggle('on',i<lit));
 
     // chapter photos: next photo glides up over the previous one, locked to scroll
